@@ -1,5 +1,8 @@
 package com.example.hanghaepluspretask.api.posts;
 
+import lombok.Getter;
+
 // TODO
-public class Post {
+public record Post(int seq) {
+
 }

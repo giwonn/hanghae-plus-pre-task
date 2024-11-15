@@ -11,4 +11,22 @@ public class PostService {
 	List<Post> findAll() {
 		return null;
 	}
+
+	// TODO
+	Post create() {
+		return null;
+	}
+
+	// TODO
+	Post findById(String id) {
+		return null;
+	}
+
+	Post update(String id, Post post) {
+		return null;
+	}
+
+	Post delete(String id) {
+		return null;
+	}
 }
