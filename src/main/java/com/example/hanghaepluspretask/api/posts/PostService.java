@@ -1,32 +1,40 @@
 package com.example.hanghaepluspretask.api.posts;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PostService {
+	private final PostRepository postRepository;
 
-	// TODO
+	PostService(PostRepository postRepository) {
+		this.postRepository = postRepository;
+	}
+
 	List<Post> findAll() {
-		return null;
+		return postRepository.findAll();
+	}
+
+	Post create(Post post) {
+		return postRepository.save(post);
 	}
 
 	// TODO
-	Post create() {
-		return null;
+	Post findById(UUID id) {
+		return postRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 	}
 
-	// TODO
-	Post findById(String id) {
-		return null;
+	Post update(Post post) {
+		return postRepository.save(post);
 	}
 
-	Post update(String id, Post post) {
-		return null;
-	}
-
-	Post delete(String id) {
-		return null;
+	// TODO: 비밀번호 받아서 비교
+	void delete(UUID id) {
+		// TODO: Soft Delete로 변경 예정
+		postRepository.deleteById(id);
 	}
 }

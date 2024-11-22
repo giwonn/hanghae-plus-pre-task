@@ -1,12 +1,14 @@
 package com.example.hanghaepluspretask.api.posts;
 
-import com.example.hanghaepluspretask.api.common.CommonResponse;
-import com.example.hanghaepluspretask.api.posts.dto.in.UpdatePostRequest;
+import com.example.hanghaepluspretask.common.CommonResponse;
+import com.example.hanghaepluspretask.api.posts.dto.in.PostRequestDto;
 import com.example.hanghaepluspretask.api.posts.dto.out.PostResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/posts")
@@ -25,17 +27,22 @@ public class PostController {
 		return ResponseEntity.ok(response);
 	}
 
-	@PostMapping()
-	ResponseEntity<CommonResponse<PostResponse>> create() {
-		PostResponse postResponse = new PostResponse(postService.create());
+	@GetMapping("/{id}")
+	ResponseEntity<CommonResponse<PostResponse>> findById(
+			@PathVariable("id") UUID id
+	) {
+		PostResponse postResponse = new PostResponse(postService.findById(id));
 		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 
 		return ResponseEntity.ok(response);
 	}
 
-	@GetMapping("/{id}")
-	ResponseEntity<CommonResponse<PostResponse>> create(@PathVariable("id") String id) {
-		PostResponse postResponse = new PostResponse(postService.findById(id));
+	@PostMapping()
+	ResponseEntity<CommonResponse<PostResponse>> create(
+			@Valid @RequestBody PostRequestDto postRequestDto
+	) {
+		Post createdPost = postService.create(postRequestDto.toEntity());
+		PostResponse postResponse = new PostResponse(createdPost);
 		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 
 		return ResponseEntity.ok(response);
@@ -43,19 +50,21 @@ public class PostController {
 
 	@PutMapping("/{id}")
 	ResponseEntity<CommonResponse<PostResponse>> update(
-			@PathVariable("id") String id,
-			@RequestBody UpdatePostRequest request
+			@PathVariable("id") UUID id,
+			@RequestBody PostRequestDto request
 	) {
-		PostResponse postResponse = new PostResponse(postService.update(id, request.toPost()));
+		Post updatedPost = postService.update(request.toEntity(id));
+		PostResponse postResponse = new PostResponse(updatedPost);
 		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 
 		return ResponseEntity.ok(response);
 	}
 
+	// TODO: Delete 요청시 비밀번호 받아서 해시화로 저장된 비밀번호랑 비교해서 지워야함
 	@DeleteMapping("/{id}")
-	ResponseEntity<CommonResponse<PostResponse>> delete(@PathVariable("id") String id) {
-		PostResponse postResponse = new PostResponse(postService.delete(id));
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
+	ResponseEntity<CommonResponse<?>> delete(@PathVariable("id") UUID id) {
+		postService.delete(id);
+		CommonResponse<?> response = CommonResponse.deleted();
 
 		return ResponseEntity.ok(response);
 	}
