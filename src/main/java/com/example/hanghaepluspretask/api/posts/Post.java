@@ -1,7 +1,7 @@
 package com.example.hanghaepluspretask.api.posts;
 
 import com.example.hanghaepluspretask.api.users.User;
-import com.example.hanghaepluspretask.common.entity.BaseEntity;
+import com.example.hanghaepluspretask.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,6 +29,7 @@ public class Post extends BaseEntity {
 	@Enumerated(EnumType.STRING)
 	private AuthorType authorType;
 
+	@Column(name = "userId", insertable = false, updatable = false)
 	private UUID userId;
 
 	private String nickname;
@@ -37,7 +38,7 @@ public class Post extends BaseEntity {
 
 	// TODO: fetch를 무조건 하는게 정말 최선일까?
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "user_id")
+	@JoinColumn(name = "userId")
 	private User user;
 
 	public Post() {}

@@ -1,5 +1,6 @@
-package com.example.hanghaepluspretask.common.entity;
+package com.example.hanghaepluspretask.common.base;
 
+import com.example.hanghaepluspretask.util.DateUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
@@ -15,14 +16,16 @@ import java.time.Instant;
 @Getter
 public abstract class BaseEntity {
 
-
-	@Column(name="created_at", updatable = false)
+	@Column(updatable = false)
 	@CreatedDate
 	private Instant createdAt;
 
-	@Column(name="created_at")
 	@LastModifiedDate
 	private Instant updatedAt;
 
 	private Instant deletedAt;
+
+	public void softDelete() {
+		deletedAt = DateUtil.now();
+	}
 }

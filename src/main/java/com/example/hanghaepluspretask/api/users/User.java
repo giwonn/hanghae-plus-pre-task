@@ -1,6 +1,6 @@
 package com.example.hanghaepluspretask.api.users;
 
-import com.example.hanghaepluspretask.common.entity.BaseEntity;
+import com.example.hanghaepluspretask.common.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,5 +1,6 @@
 package com.example.hanghaepluspretask.api.posts;
 
+import com.example.hanghaepluspretask.api.posts.dto.in.DeletePostRequestDto;
 import com.example.hanghaepluspretask.common.CommonResponse;
 import com.example.hanghaepluspretask.api.posts.dto.in.PostRequestDto;
 import com.example.hanghaepluspretask.api.posts.dto.out.PostResponse;
@@ -21,9 +22,12 @@ public class PostController {
 
 	@GetMapping()
 	ResponseEntity<CommonResponse<List<PostResponse>>> findAll() {
-		List<PostResponse> postResponseList = postService.findAll().stream().map(PostResponse::new).toList();
-		CommonResponse<List<PostResponse>> response = CommonResponse.ok(postResponseList);
+		List<PostResponse> postResponseList = postService.findAll()
+				.stream()
+				.map(PostResponse::new)
+				.toList();
 
+		CommonResponse<List<PostResponse>> response = CommonResponse.ok(postResponseList);
 		return ResponseEntity.ok(response);
 	}
 
@@ -32,8 +36,8 @@ public class PostController {
 			@PathVariable("id") UUID id
 	) {
 		PostResponse postResponse = new PostResponse(postService.findById(id));
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 
+		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 		return ResponseEntity.ok(response);
 	}
 
@@ -43,8 +47,8 @@ public class PostController {
 	) {
 		Post createdPost = postService.create(postRequestDto.toEntity());
 		PostResponse postResponse = new PostResponse(createdPost);
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 
+		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 		return ResponseEntity.ok(response);
 	}
 
@@ -55,17 +59,19 @@ public class PostController {
 	) {
 		Post updatedPost = postService.update(request.toEntity(id));
 		PostResponse postResponse = new PostResponse(updatedPost);
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 
+		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 		return ResponseEntity.ok(response);
 	}
 
-	// TODO: Delete 요청시 비밀번호 받아서 해시화로 저장된 비밀번호랑 비교해서 지워야함
 	@DeleteMapping("/{id}")
-	ResponseEntity<CommonResponse<?>> delete(@PathVariable("id") UUID id) {
-		postService.delete(id);
-		CommonResponse<?> response = CommonResponse.deleted();
+	ResponseEntity<CommonResponse<?>> delete(
+			@PathVariable("id") UUID id,
+			@RequestBody DeletePostRequestDto request
+	) {
+		postService.delete(id, request.getPassword());
 
+		CommonResponse<?> response = CommonResponse.deleted();
 		return ResponseEntity.ok(response);
 	}
 }

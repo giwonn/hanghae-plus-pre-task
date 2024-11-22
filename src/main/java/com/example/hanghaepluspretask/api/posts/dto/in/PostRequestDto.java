@@ -2,6 +2,7 @@ package com.example.hanghaepluspretask.api.posts.dto.in;
 
 import com.example.hanghaepluspretask.api.posts.AuthorType;
 import com.example.hanghaepluspretask.api.posts.Post;
+import com.example.hanghaepluspretask.util.PasswordEncoderUtil;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -44,7 +45,7 @@ public class PostRequestDto {
 				.authorType(authorType)
 				.userId(userId)
 				.nickname(nickname)
-				.hashedPassword(password) // TODO: 여기서 해시 적용할 예정.
+				.hashedPassword(PasswordEncoderUtil.encode(password))
 				.build();
 	}
 
@@ -56,7 +57,7 @@ public class PostRequestDto {
 				.authorType(authorType)
 				.userId(userId)
 				.nickname(nickname)
-				.hashedPassword(password) // TODO: 여기서 해시 적용할 예정.
+				.hashedPassword(PasswordEncoderUtil.encode(password))
 				.build();
 	}
 
