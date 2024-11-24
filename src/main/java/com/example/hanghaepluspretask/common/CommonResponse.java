@@ -1,4 +1,4 @@
-package com.example.hanghaepluspretask.api.common;
+package com.example.hanghaepluspretask.common;
 
 import lombok.Data;
 
@@ -15,5 +15,9 @@ public class CommonResponse<T> {
 
 	public static <T> CommonResponse<T> ok(T data) {
 		return new CommonResponse<>(ResponseStatus.OK.getMessage(), data);
+	}
+
+	public static <T> CommonResponse<T> deleted() {
+		return new CommonResponse<>(ResponseStatus.OK.getMessage(), null);
 	}
 }

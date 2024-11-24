@@ -1,12 +1,15 @@
 package com.example.hanghaepluspretask.api.posts;
 
-import com.example.hanghaepluspretask.api.common.CommonResponse;
-import com.example.hanghaepluspretask.api.posts.dto.in.UpdatePostRequest;
+import com.example.hanghaepluspretask.api.posts.dto.in.DeletePostRequestDto;
+import com.example.hanghaepluspretask.common.CommonResponse;
+import com.example.hanghaepluspretask.api.posts.dto.in.PostRequestDto;
 import com.example.hanghaepluspretask.api.posts.dto.out.PostResponse;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/posts")
@@ -19,44 +22,56 @@ public class PostController {
 
 	@GetMapping()
 	ResponseEntity<CommonResponse<List<PostResponse>>> findAll() {
-		List<PostResponse> postResponseList = postService.findAll().stream().map(PostResponse::new).toList();
+		List<PostResponse> postResponseList = postService.findAll()
+				.stream()
+				.map(PostResponse::new)
+				.toList();
+
 		CommonResponse<List<PostResponse>> response = CommonResponse.ok(postResponseList);
-
-		return ResponseEntity.ok(response);
-	}
-
-	@PostMapping()
-	ResponseEntity<CommonResponse<PostResponse>> create() {
-		PostResponse postResponse = new PostResponse(postService.create());
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
-
 		return ResponseEntity.ok(response);
 	}
 
 	@GetMapping("/{id}")
-	ResponseEntity<CommonResponse<PostResponse>> create(@PathVariable("id") String id) {
+	ResponseEntity<CommonResponse<PostResponse>> findById(
+			@PathVariable("id") UUID id
+	) {
 		PostResponse postResponse = new PostResponse(postService.findById(id));
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 
+		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
+		return ResponseEntity.ok(response);
+	}
+
+	@PostMapping()
+	ResponseEntity<CommonResponse<PostResponse>> create(
+			@Valid @RequestBody PostRequestDto postRequestDto
+	) {
+		Post createdPost = postService.create(postRequestDto.toEntity());
+		PostResponse postResponse = new PostResponse(createdPost);
+
+		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 		return ResponseEntity.ok(response);
 	}
 
 	@PutMapping("/{id}")
 	ResponseEntity<CommonResponse<PostResponse>> update(
-			@PathVariable("id") String id,
-			@RequestBody UpdatePostRequest request
+			@PathVariable("id") UUID id,
+			@RequestBody PostRequestDto request
 	) {
-		PostResponse postResponse = new PostResponse(postService.update(id, request.toPost()));
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
+		Post updatedPost = postService.update(request.toEntity(id));
+		PostResponse postResponse = new PostResponse(updatedPost);
 
+		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
 		return ResponseEntity.ok(response);
 	}
 
 	@DeleteMapping("/{id}")
-	ResponseEntity<CommonResponse<PostResponse>> delete(@PathVariable("id") String id) {
-		PostResponse postResponse = new PostResponse(postService.delete(id));
-		CommonResponse<PostResponse> response = CommonResponse.ok(postResponse);
+	ResponseEntity<CommonResponse<?>> delete(
+			@PathVariable("id") UUID id,
+			@RequestBody DeletePostRequestDto request
+	) {
+		postService.delete(id, request.getPassword());
 
+		CommonResponse<?> response = CommonResponse.deleted();
 		return ResponseEntity.ok(response);
 	}
 }

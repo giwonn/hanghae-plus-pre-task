@@ -1,4 +1,4 @@
-package com.example.hanghaepluspretask.api.common;
+package com.example.hanghaepluspretask.common;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
