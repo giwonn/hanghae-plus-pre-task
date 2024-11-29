@@ -2,6 +2,7 @@ package com.example.hanghaepluspretask.api.posts;
 
 import com.example.hanghaepluspretask.api.users.User;
 import com.example.hanghaepluspretask.common.base.BaseEntity;
+import com.example.hanghaepluspretask.util.PasswordEncoderUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,5 +43,4 @@ public class Post extends BaseEntity {
 	private User user;
 
 	public Post() {}
-
 }

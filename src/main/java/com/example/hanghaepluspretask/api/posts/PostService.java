@@ -33,9 +33,9 @@ public class PostService {
 	}
 
 	@Transactional
-	public void delete(UUID id, String password) {
+	public void delete(UUID id, String rawPassword) {
 		Post post = postRepository.getByIdAndDeletedAtIsNull(id);
-		if (!PasswordEncoderUtil.matches(password, post.getHashedPassword())) {
+		if (!PasswordEncoderUtil.matches(rawPassword, post.getHashedPassword())) {
 			throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
 		}
 
